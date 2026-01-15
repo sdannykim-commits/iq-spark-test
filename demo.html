@@ -1,0 +1,1999 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>IQ Spark — Premium IQ Test</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --p: #6366f1;
+      --p2: #8b5cf6;
+      --bg: #0f0f1a;
+      --card: #1a1a2e;
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --acc: #f59e0b;
+      --ok: #22c55e;
+      --err: #ef4444
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 16px
+    }
+
+    @media(min-width:768px) {
+      .container {
+        padding: 0 24px
+      }
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--p), var(--p2));
+      padding: 12px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100
+    }
+
+    .hd {
+      display: flex;
+      justify-content: space-between;
+      align-items: center
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    @media(min-width:768px) {
+      .logo {
+        font-size: 1.3rem
+      }
+    }
+
+    .badge {
+      background: var(--ok);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 700
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      border: none;
+      transition: .2s;
+      width: 100%
+    }
+
+    @media(min-width:480px) {
+      .btn {
+        width: auto;
+        padding: 14px 32px
+      }
+    }
+
+    .btn-p {
+      background: linear-gradient(135deg, var(--p), var(--p2));
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(99, 102, 241, .4)
+    }
+
+    .btn-p:hover {
+      transform: translateY(-2px)
+    }
+
+    .btn-acc {
+      background: var(--acc);
+      color: #000
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px
+    }
+
+    @media(min-width:768px) {
+      .card {
+        padding: 24px
+      }
+    }
+
+    .page {
+      display: none
+    }
+
+    .page.active {
+      display: block
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 12px
+    }
+
+    @media(min-width:768px) {
+      h1 {
+        font-size: 2.5rem
+      }
+    }
+
+    h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 10px
+    }
+
+    @media(min-width:768px) {
+      h2 {
+        font-size: 1.5rem
+      }
+    }
+
+    .tc {
+      text-align: center
+    }
+
+    .tm {
+      color: var(--muted)
+    }
+
+    /* Test UI */
+    .test-top {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 12px 16px;
+      background: var(--card);
+      border-radius: 12px;
+      margin-bottom: 16px
+    }
+
+    @media(min-width:480px) {
+      .test-top {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 24px
+      }
+    }
+
+    .test-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center
+    }
+
+    .timer {
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    @media(min-width:768px) {
+      .timer {
+        font-size: 1.3rem
+      }
+    }
+
+    .timer.warn {
+      color: var(--acc)
+    }
+
+    .timer.danger {
+      color: var(--err);
+      animation: pulse 1s infinite
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .6
+      }
+    }
+
+    .prog {
+      height: 6px;
+      background: rgba(255, 255, 255, .1);
+      border-radius: 3px;
+      overflow: hidden;
+      flex: 1;
+      margin: 0 12px
+    }
+
+    .prog-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--p), var(--acc));
+      transition: .3s
+    }
+
+    /* Question Area - Responsive */
+    .q-area {
+      display: flex;
+      flex-direction: column;
+      gap: 16px
+    }
+
+    @media(min-width:768px) {
+      .q-area {
+        flex-direction: row;
+        gap: 24px
+      }
+
+      .q-box {
+        flex: 1
+      }
+    }
+
+    .q-box {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 16px;
+      border: 1px solid var(--border)
+    }
+
+    @media(min-width:768px) {
+      .q-box {
+        padding: 24px
+      }
+    }
+
+    .q-box h3 {
+      color: var(--p);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px
+    }
+
+    @media(min-width:768px) {
+      .q-box h3 {
+        font-size: 12px;
+        margin-bottom: 16px
+      }
+    }
+
+    /* Matrix Grid */
+    .matrix {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      max-width: 180px;
+      margin: 0 auto
+    }
+
+    @media(min-width:480px) {
+      .matrix {
+        gap: 6px;
+        max-width: 220px
+      }
+    }
+
+    @media(min-width:768px) {
+      .matrix {
+        gap: 8px;
+        max-width: 260px
+      }
+    }
+
+    .m-cell {
+      aspect-ratio: 1;
+      background: rgba(255, 255, 255, .03);
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px
+    }
+
+    @media(min-width:480px) {
+      .m-cell {
+        font-size: 20px
+      }
+    }
+
+    @media(min-width:768px) {
+      .m-cell {
+        font-size: 24px;
+        border-radius: 8px
+      }
+    }
+
+    .m-cell.q {
+      background: var(--acc);
+      border-color: var(--acc);
+      color: #000;
+      font-size: 20px;
+      font-weight: 800
+    }
+
+    @media(min-width:768px) {
+      .m-cell.q {
+        font-size: 28px
+      }
+    }
+
+    /* Sequence */
+    .seq {
+      display: flex;
+      gap: 4px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap
+    }
+
+    .seq-cell {
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, .03);
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700
+    }
+
+    @media(min-width:480px) {
+      .seq-cell {
+        width: 44px;
+        height: 44px;
+        font-size: 16px
+      }
+    }
+
+    @media(min-width:768px) {
+      .seq-cell {
+        width: 54px;
+        height: 54px;
+        font-size: 18px
+      }
+    }
+
+    .seq-cell.q {
+      background: var(--acc);
+      border-color: var(--acc);
+      color: #000
+    }
+
+    .seq-arr {
+      color: var(--muted);
+      font-size: 10px
+    }
+
+    @media(min-width:480px) {
+      .seq-arr {
+        font-size: 12px
+      }
+    }
+
+    /* Options */
+    .opts {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px
+    }
+
+    @media(min-width:480px) {
+      .opts {
+        gap: 10px
+      }
+    }
+
+    @media(min-width:768px) {
+      .opts {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px
+      }
+    }
+
+    .opt {
+      background: rgba(255, 255, 255, .02);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: .2s;
+      min-height: 48px
+    }
+
+    @media(min-width:480px) {
+      .opt {
+        padding: 12px;
+        min-height: 56px
+      }
+    }
+
+    @media(min-width:768px) {
+      .opt {
+        padding: 14px;
+        min-height: 64px
+      }
+    }
+
+    .opt:hover {
+      border-color: var(--p);
+      background: rgba(99, 102, 241, .1)
+    }
+
+    .opt.sel {
+      border-color: var(--acc);
+      background: rgba(245, 158, 11, .15)
+    }
+
+    .opt-l {
+      font-weight: 700;
+      color: var(--p);
+      width: 20px;
+      font-size: 12px
+    }
+
+    @media(min-width:768px) {
+      .opt-l {
+        font-size: 14px
+      }
+    }
+
+    .opt-c {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      font-size: 14px
+    }
+
+    @media(min-width:480px) {
+      .opt-c {
+        font-size: 18px
+      }
+    }
+
+    @media(min-width:768px) {
+      .opt-c {
+        font-size: 22px
+      }
+    }
+
+    /* Question Navigation */
+    .q-nav-wrap {
+      overflow-x: auto;
+      margin-top: 16px;
+      padding-bottom: 8px
+    }
+
+    .q-nav {
+      display: flex;
+      gap: 4px;
+      padding: 12px;
+      background: rgba(255, 255, 255, .03);
+      border-radius: 10px;
+      min-width: max-content
+    }
+
+    @media(min-width:768px) {
+      .q-nav {
+        gap: 6px;
+        padding: 14px;
+        justify-content: center;
+        flex-wrap: wrap
+      }
+    }
+
+    .qn {
+      width: 28px;
+      height: 28px;
+      border-radius: 5px;
+      border: none;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      flex-shrink: 0
+    }
+
+    @media(min-width:768px) {
+      .qn {
+        width: 34px;
+        height: 34px;
+        font-size: 13px
+      }
+    }
+
+    .qn.done {
+      background: var(--ok);
+      color: #fff
+    }
+
+    .qn.cur {
+      background: var(--acc);
+      color: #000
+    }
+
+    .qn.un {
+      background: #4b5563;
+      color: #fff
+    }
+
+    /* Action Button */
+    .action-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px
+    }
+
+    .action-row .btn {
+      flex: 1
+    }
+
+    .next-btn {
+      background: var(--acc);
+      color: #000;
+      font-size: 14px;
+      padding: 14px 20px
+    }
+
+    @media(min-width:768px) {
+      .next-btn {
+        font-size: 16px;
+        padding: 16px 32px
+      }
+    }
+
+    /* Stats */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 16px 0
+    }
+
+    @media(min-width:768px) {
+      .stats {
+        gap: 16px;
+        margin: 24px 0
+      }
+    }
+
+    .stat-box {
+      background: rgba(255, 255, 255, .03);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center
+    }
+
+    @media(min-width:768px) {
+      .stat-box {
+        padding: 16px;
+        border-radius: 12px
+      }
+    }
+
+    .stat-num {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--p)
+    }
+
+    @media(min-width:768px) {
+      .stat-num {
+        font-size: 24px
+      }
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 4px
+    }
+
+    @media(min-width:768px) {
+      .stat-label {
+        font-size: 12px
+      }
+    }
+
+    /* Processing */
+    .proc {
+      text-align: center;
+      padding: 40px 20px
+    }
+
+    @media(min-width:768px) {
+      .proc {
+        padding: 60px 20px
+      }
+    }
+
+    .proc-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+      animation: bounce 1s infinite
+    }
+
+    @media(min-width:768px) {
+      .proc-icon {
+        font-size: 64px
+      }
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(-10px)
+      }
+    }
+
+    /* Email */
+    .email-form {
+      max-width: 100%;
+      margin: 0 auto
+    }
+
+    @media(min-width:480px) {
+      .email-form {
+        max-width: 400px
+      }
+    }
+
+    .email-in {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-size: 16px;
+      background: var(--card);
+      color: var(--text);
+      margin-bottom: 12px
+    }
+
+    .email-in:focus {
+      border-color: var(--p);
+      outline: none
+    }
+
+    /* Result */
+    .res-card {
+      background: linear-gradient(135deg, var(--p), var(--p2));
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      color: #fff
+    }
+
+    @media(min-width:768px) {
+      .res-card {
+        padding: 40px;
+        border-radius: 20px
+      }
+    }
+
+    .iq-big {
+      font-size: 48px;
+      font-weight: 800;
+      margin: 12px 0
+    }
+
+    @media(min-width:768px) {
+      .iq-big {
+        font-size: 72px
+      }
+    }
+
+    .price {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--p)
+    }
+
+    @media(min-width:768px) {
+      .price {
+        font-size: 48px
+      }
+    }
+
+    .feat {
+      text-align: left;
+      margin: 20px 0
+    }
+
+    .feat-i {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 0;
+      font-size: 14px
+    }
+
+    .feat-i::before {
+      content: '✓';
+      color: var(--ok);
+      font-weight: 700
+    }
+
+    /* Answer Review */
+    .review-section {
+      margin-top: 24px
+    }
+
+    .review-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px
+    }
+
+    @media(min-width:768px) {
+      .review-item {
+        padding: 20px
+      }
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px
+    }
+
+    .review-qnum {
+      font-weight: 700;
+      color: var(--p)
+    }
+
+    .review-status {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600
+    }
+
+    .review-status.correct {
+      background: rgba(34, 197, 94, .2);
+      color: var(--ok)
+    }
+
+    .review-status.wrong {
+      background: rgba(239, 68, 68, .2);
+      color: var(--err)
+    }
+
+    .review-status.skip {
+      background: rgba(148, 163, 184, .2);
+      color: var(--muted)
+    }
+
+    .review-content {
+      font-size: 13px;
+      color: var(--muted)
+    }
+
+    .review-answer {
+      margin-top: 8px;
+      padding: 8px 12px;
+      background: rgba(34, 197, 94, .1);
+      border-radius: 8px;
+      font-size: 13px
+    }
+
+    .review-answer b {
+      color: var(--ok)
+    }
+
+    .review-your {
+      color: var(--err)
+    }
+
+    footer {
+      background: var(--card);
+      padding: 20px 16px;
+      text-align: center;
+      margin-top: 32px;
+      border-top: 1px solid var(--border)
+    }
+
+    .f-links {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap
+    }
+
+    .f-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12px
+    }
+
+    /* Payment Modal */
+    .pay-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px
+    }
+
+    .pay-modal.active {
+      display: flex
+    }
+
+    .pay-box {
+      background: var(--card);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 420px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border: 1px solid var(--border)
+    }
+
+    .pay-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center
+    }
+
+    .pay-header h3 {
+      font-size: 18px;
+      font-weight: 700
+    }
+
+    .pay-close {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 24px;
+      cursor: pointer;
+      padding: 4px
+    }
+
+    .pay-close:hover {
+      color: var(--text)
+    }
+
+    .pay-body {
+      padding: 20px
+    }
+
+    .pay-methods {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 20px
+    }
+
+    .pay-method {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px
+    }
+
+    .pay-method:hover {
+      border-color: var(--p);
+      background: rgba(99, 102, 241, 0.1)
+    }
+
+    .pay-method.selected {
+      border-color: var(--acc);
+      background: rgba(245, 158, 11, 0.15)
+    }
+
+    .pay-method svg {
+      width: 40px;
+      height: 28px
+    }
+
+    .pay-method span {
+      font-size: 10px;
+      color: var(--muted)
+    }
+
+    .pay-form {
+      display: none
+    }
+
+    .pay-form.active {
+      display: block
+    }
+
+    .pay-input-group {
+      margin-bottom: 16px
+    }
+
+    .pay-input-group label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px
+    }
+
+    .pay-input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+      font-size: 16px;
+      font-family: inherit
+    }
+
+    .pay-input:focus {
+      border-color: var(--p);
+      outline: none
+    }
+
+    .pay-input::placeholder {
+      color: var(--muted)
+    }
+
+    .pay-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px
+    }
+
+    .pay-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      background: rgba(99, 102, 241, 0.1);
+      border-radius: 10px;
+      margin-bottom: 16px
+    }
+
+    .pay-total-label {
+      font-size: 14px;
+      color: var(--muted)
+    }
+
+    .pay-total-amount {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--p)
+    }
+
+    .pay-submit {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--p), var(--p2));
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.2s
+    }
+
+    .pay-submit:hover {
+      transform: translateY(-2px)
+    }
+
+    .pay-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none
+    }
+
+    .pay-secure {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 16px;
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    .pay-processing {
+      display: none;
+      text-align: center;
+      padding: 40px 20px
+    }
+
+    .pay-processing.active {
+      display: block
+    }
+
+    .pay-processing .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid var(--border);
+      border-top-color: var(--p);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    .pay-success {
+      display: none;
+      text-align: center;
+      padding: 40px 20px
+    }
+
+    .pay-success.active {
+      display: block
+    }
+
+    .pay-success-icon {
+      width: 64px;
+      height: 64px;
+      background: var(--ok);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 32px
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container hd">
+      <div class="logo">⚡ IQ Spark</div>
+    </div>
+  </header>
+
+  <!-- LANDING -->
+  <div id="p-land" class="page active">
+    <section style="padding:40px 0" class="tc">
+      <div class="container">
+        <div class="badge" style="background:var(--acc);margin-bottom:20px">🧠 FREE IQ TEST</div>
+        <h1>Test Your<br><span
+            style="background:linear-gradient(90deg,var(--p),var(--acc));background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent">Cognitive
+            Abilities</span></h1>
+        <p class="tm" style="font-size:15px;max-width:500px;margin:0 auto 24px">8 types of questions. Pattern
+          recognition, numerical reasoning, spatial intelligence & more.</p>
+        <div class="stats">
+          <div class="stat-box">
+            <div class="stat-num">30</div>
+            <div class="stat-label">Questions</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">20</div>
+            <div class="stat-label">Minutes</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num" style="color:var(--acc)">FREE</div>
+            <div class="stat-label">To Start</div>
+          </div>
+        </div>
+        <div class="card" style="margin:24px auto;max-width:500px;text-align:left">
+          <h3 style="margin-bottom:12px;font-size:14px">Question Types:</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px">
+            <div>🔷 Matrix Pattern</div>
+            <div>🔢 Number Matrix</div>
+            <div>📐 Shape Counting</div>
+            <div>➕ Number Sequence</div>
+            <div>📦 Cube Folding</div>
+            <div>🧩 Pattern Completion</div>
+            <div>🔄 Rotational Logic</div>
+            <div>🎯 Symbol Matrix</div>
+          </div>
+        </div>
+        <button class="btn btn-p" onclick="startTest()" style="font-size:16px;padding:16px 40px">Start Free Test
+          →</button>
+
+      </div>
+    </section>
+  </div>
+
+  <!-- TEST -->
+  <div id="p-test" class="page">
+    <div class="container" style="padding:16px 0">
+      <div class="test-top">
+        <div class="test-info">
+          <div style="font-weight:600">Q<span id="qnum">1</span>/30</div>
+          <div id="timer" class="timer">⏱️ 20:00</div>
+        </div>
+        <div class="prog">
+          <div id="prog-fill" class="prog-fill" style="width:3%"></div>
+        </div>
+      </div>
+      <div class="q-area">
+        <div class="q-box">
+          <h3 id="q-title">Pattern Recognition</h3>
+          <div id="q-content"></div>
+        </div>
+        <div class="q-box">
+          <h3>Select Answer</h3>
+          <div id="opts" class="opts"></div>
+        </div>
+      </div>
+      <div class="action-row">
+        <button class="btn next-btn" onclick="nextQ()" id="next-btn">Next →</button>
+      </div>
+      <div class="q-nav-wrap">
+        <div class="q-nav" id="qnav"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROCESSING -->
+  <div id="p-proc" class="page">
+    <div class="container">
+      <div class="card proc">
+        <div class="proc-icon">🧠</div>
+        <div id="proc-txt" style="font-size:16px;color:var(--p);margin-bottom:16px">Analyzing responses...</div>
+        <div class="prog" style="max-width:280px;margin:0 auto">
+          <div id="proc-bar" class="prog-fill" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMAIL -->
+  <div id="p-email" class="page">
+    <div class="container" style="padding:40px 16px">
+      <div class="card tc" style="max-width:450px;margin:0 auto">
+        <div style="font-size:40px;margin-bottom:12px">📧</div>
+        <h2>Results Are Ready!</h2>
+        <p class="tm" style="margin-bottom:20px;font-size:14px">Enter email to receive your IQ score.</p>
+        <div class="email-form">
+          <input type="email" id="email" class="email-in" placeholder="your@email.com">
+          <button class="btn btn-p" onclick="submitEmail()">Send Results →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAYWALL -->
+  <div id="p-pay" class="page">
+    <div class="container" style="padding:24px 16px">
+      <div class="card tc" style="border:2px solid var(--acc)">
+        <div style="font-size:48px;margin-bottom:12px">🎉</div>
+        <h2 style="font-size:20px;margin-bottom:8px">Test Completed!</h2>
+        <p class="tm" style="margin-bottom:24px;font-size:14px">Your results are ready to be unlocked</p>
+        <h2 style="font-size:18px">Unlock Full Report + Answer Key</h2>
+        <div class="price">$14.99</div>
+        <div class="tm" style="margin-bottom:16px;font-size:13px">One-time • No subscription</div>
+        <div class="feat">
+          <div class="feat-i">Detailed IQ Analysis</div>
+          <div class="feat-i">All 30 Answers Explained</div>
+          <div class="feat-i">Cognitive Strengths</div>
+          <div class="feat-i">PDF Certificate</div>
+        </div>
+        <button class="btn btn-p" onclick="openPayModal()">💳 Unlock Report</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS WITH ANSWER REVIEW -->
+  <div id="p-res" class="page">
+    <div class="container" style="padding:24px 16px;max-width:700px">
+      <div class="tc" style="margin-bottom:20px"><span class="badge">✓ Report Unlocked</span>
+        <h1 style="margin-top:12px">Your IQ Report</h1>
+      </div>
+      <div class="res-card" style="margin-bottom:20px">
+        <div style="font-size:48px">🧠</div>
+        <div class="iq-big" id="fin-iq">115</div>
+        <div>Your IQ</div>
+        <div style="margin-top:12px;opacity:.9;font-size:14px">Top <span id="fin-pct">15</span>%</div>
+      </div>
+      <div class="stats" style="margin-bottom:20px">
+        <div class="stat-box">
+          <div class="stat-num" style="color:var(--ok)" id="stat-correct">0</div>
+          <div class="stat-label">Correct</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" style="color:var(--err)" id="stat-wrong">0</div>
+          <div class="stat-label">Wrong</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="stat-skip">0</div>
+          <div class="stat-label">Skipped</div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:20px">
+        <h3 style="margin-bottom:12px;font-size:14px">📊 Category Analysis</h3>
+        <div id="cat-res"></div>
+      </div>
+
+      <!-- Answer Review Section -->
+      <div class="card review-section">
+        <h3 style="margin-bottom:16px;font-size:16px">📝 Answer Key & Explanations</h3>
+        <div id="answer-review"></div>
+      </div>
+
+      <div class="tc" style="margin-top:24px"><button class="btn btn-p" onclick="showP('land')">Take Again</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="f-links"><a href="#">FAQ</a><a href="#">Support</a><a href="terms.html">Terms</a><a
+        href="privacy.html">Privacy</a></div>
+    <p class="tm" style="font-size:11px">© 2025 IQ Spark • Entertainment only</p>
+  </footer>
+
+  <!-- Payment Modal -->
+  <div id="pay-modal" class="pay-modal">
+    <div class="pay-box">
+      <div class="pay-header">
+        <h3>💳 Secure Payment</h3>
+        <button class="pay-close" onclick="closePayModal()">×</button>
+      </div>
+      <div class="pay-body">
+        <!-- Payment Content -->
+        <div id="pay-content">
+          <p style="font-size:13px;color:var(--muted);margin-bottom:16px;text-align:center">Select payment method</p>
+
+          <!-- Payment Methods -->
+          <div class="pay-methods">
+            <div class="pay-method" onclick="selectPayMethod('paypal')" data-method="paypal">
+              <svg viewBox="0 0 48 32">
+                <rect width="48" height="32" rx="4" fill="#003087" /><text x="24" y="20" font-size="10" fill="white"
+                  text-anchor="middle" font-weight="bold">PayPal</text>
+              </svg>
+              <span>PayPal</span>
+            </div>
+            <div class="pay-method" onclick="selectPayMethod('visa')" data-method="visa">
+              <svg viewBox="0 0 48 32">
+                <rect width="48" height="32" rx="4" fill="#1A1F71" /><text x="24" y="21" font-size="12" fill="white"
+                  text-anchor="middle" font-weight="bold" font-style="italic">VISA</text>
+              </svg>
+              <span>Visa</span>
+            </div>
+            <div class="pay-method" onclick="selectPayMethod('mastercard')" data-method="mastercard">
+              <svg viewBox="0 0 48 32">
+                <rect width="48" height="32" rx="4" fill="#000" />
+                <circle cx="18" cy="16" r="10" fill="#EB001B" />
+                <circle cx="30" cy="16" r="10" fill="#F79E1B" />
+              </svg>
+              <span>Mastercard</span>
+            </div>
+            <div class="pay-method" onclick="selectPayMethod('amex')" data-method="amex">
+              <svg viewBox="0 0 48 32">
+                <rect width="48" height="32" rx="4" fill="#006FCF" /><text x="24" y="20" font-size="8" fill="white"
+                  text-anchor="middle" font-weight="bold">AMEX</text>
+              </svg>
+              <span>American Express</span>
+            </div>
+            <div class="pay-method" onclick="selectPayMethod('applepay')" data-method="applepay">
+              <svg viewBox="0 0 48 32">
+                <rect width="48" height="32" rx="4" fill="#000" /><text x="24" y="20" font-size="9" fill="white"
+                  text-anchor="middle" font-weight="500"> Pay</text>
+              </svg>
+              <span>Apple Pay</span>
+            </div>
+          </div>
+
+          <!-- Card Form -->
+          <div id="card-form" class="pay-form">
+            <div class="pay-input-group">
+              <label>Card Number</label>
+              <input type="text" class="pay-input" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19"
+                oninput="formatCardNumber(this)">
+            </div>
+            <div class="pay-input-group">
+              <label>Name on Card</label>
+              <input type="text" class="pay-input" id="card-name" placeholder="John Doe">
+            </div>
+            <div class="pay-row">
+              <div class="pay-input-group">
+                <label>Expiry Date</label>
+                <input type="text" class="pay-input" id="card-expiry" placeholder="MM/YY" maxlength="5"
+                  oninput="formatExpiry(this)">
+              </div>
+              <div class="pay-input-group">
+                <label>CVV</label>
+                <input type="password" class="pay-input" id="card-cvv" placeholder="•••" maxlength="4">
+              </div>
+            </div>
+          </div>
+
+          <!-- PayPal/Apple Pay Message -->
+          <div id="external-pay" class="pay-form" style="text-align:center;padding:20px 0">
+            <p style="color:var(--muted);font-size:14px">You'll be redirected to complete payment</p>
+          </div>
+
+          <!-- Total -->
+          <div class="pay-total">
+            <span class="pay-total-label">Total</span>
+            <span class="pay-total-amount">$14.99</span>
+          </div>
+
+          <!-- Submit Button -->
+          <button class="pay-submit" id="pay-submit-btn" onclick="processPayment()" disabled>
+            <span>🔒</span> Complete Payment
+          </button>
+
+          <div class="pay-secure">
+            <span>🔐</span> Secured with 256-bit SSL encryption
+          </div>
+        </div>
+
+        <!-- Processing State -->
+        <div id="pay-processing" class="pay-processing">
+          <div class="spinner"></div>
+          <h3 style="margin-bottom:8px">Processing Payment...</h3>
+          <p style="color:var(--muted);font-size:14px">Please don't close this window</p>
+        </div>
+
+        <!-- Success State -->
+        <div id="pay-success" class="pay-success">
+          <div class="pay-success-icon">✓</div>
+          <h3 style="margin-bottom:8px">Payment Successful!</h3>
+          <p style="color:var(--muted);font-size:14px;margin-bottom:20px">Your report is now unlocked</p>
+          <button class="btn btn-p" onclick="showResults()">View My Results →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let cQ = 0, ans = new Array(30).fill(null), qs = [], tLeft = 20 * 60, tInt;
+    function showP(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById('p-' + id).classList.add('active'); window.scrollTo(0, 0) }
+
+    // 8 Diverse Question Types - wwiqtest.com Style
+    function genQs() {
+      qs = [];
+      for (let i = 0; i < 6; i++) qs.push(genMatrixXOR(i));       // Q1-6: Matrix XOR Pattern
+      for (let i = 0; i < 4; i++) qs.push(genNumberMatrix(i));   // Q7-10: Number Matrix Logic
+      for (let i = 0; i < 5; i++) qs.push(genShapeCounting(i));  // Q11-15: Shape Counting
+      for (let i = 0; i < 4; i++) qs.push(genNumberSequence(i)); // Q16-19: Number Sequence
+      for (let i = 0; i < 3; i++) qs.push(genCubeFolding(i));    // Q20-22: Cube Folding
+      for (let i = 0; i < 4; i++) qs.push(genPatternCompletion(i)); // Q23-26: Pattern Completion
+      for (let i = 0; i < 2; i++) qs.push(genRotationalLogic(i)); // Q27-28: Rotational Logic
+      for (let i = 0; i < 2; i++) qs.push(genSymbolMatrix(i));    // Q29-30: Symbol Matrix
+    }
+
+    // Type 1: Matrix XOR Pattern (도형 XOR/추가/제거 로직)
+    function genMatrixXOR(seed) {
+      const shapes = {
+        circle: '<circle cx="25" cy="25" r="18" fill="none" stroke="currentColor" stroke-width="3"/>',
+        square: '<rect x="7" y="7" width="36" height="36" fill="none" stroke="currentColor" stroke-width="3"/>',
+        triangle: '<polygon points="25,5 45,45 5,45" fill="none" stroke="currentColor" stroke-width="3"/>',
+        diamond: '<polygon points="25,5 45,25 25,45 5,25" fill="none" stroke="currentColor" stroke-width="3"/>',
+        cross: '<line x1="10" y1="10" x2="40" y2="40" stroke="currentColor" stroke-width="3"/><line x1="40" y1="10" x2="10" y2="40" stroke="currentColor" stroke-width="3"/>',
+        dot: '<circle cx="25" cy="25" r="8" fill="currentColor"/>'
+      };
+      const shapeKeys = Object.keys(shapes);
+      const patterns = [
+        // A + B = C (합집합): 첫째 + 둘째 = 셋째
+        { rule: 'add', grid: [['circle'], ['square'], ['circle', 'square'], ['triangle'], ['dot'], ['triangle', 'dot'], ['diamond'], ['cross'], ['diamond', 'cross']] },
+        // A - B = C (차집합): 겹치는 부분 제거
+        { rule: 'xor', grid: [['circle', 'square'], ['square'], ['circle'], ['triangle', 'dot'], ['dot'], ['triangle'], ['diamond', 'cross'], ['cross'], ['diamond']] },
+        // 행별 규칙: 회전하며 추가
+        { rule: 'rotate', grid: [['circle'], ['circle', 'dot'], ['circle', 'dot', 'cross'], ['square'], ['square', 'dot'], ['square', 'dot', 'cross'], ['triangle'], ['triangle', 'dot'], ['triangle', 'dot', 'cross']] },
+        // 대각선 규칙
+        { rule: 'diagonal', grid: [['circle'], ['square'], ['triangle'], ['square'], ['triangle'], ['diamond'], ['triangle'], ['diamond'], ['cross']] },
+        // XOR 복합
+        { rule: 'complex', grid: [['circle', 'dot'], ['dot', 'cross'], ['circle', 'cross'], ['square', 'dot'], ['dot', 'triangle'], ['square', 'triangle'], ['diamond', 'cross'], ['cross', 'circle'], ['diamond', 'circle']] },
+        // 순차 추가
+        { rule: 'sequence', grid: [['dot'], ['dot', 'cross'], ['dot', 'cross', 'circle'], ['cross'], ['cross', 'circle'], ['cross', 'circle', 'square'], ['circle'], ['circle', 'square'], ['circle', 'square', 'triangle']] }
+      ];
+      const p = patterns[seed % patterns.length];
+      const answer = p.grid[8];
+
+      let prompt = '<div class="matrix">';
+      for (let i = 0; i < 9; i++) {
+        if (i === 8) {
+          prompt += '<div class="m-cell q">?</div>';
+        } else {
+          const cellShapes = p.grid[i];
+          prompt += `<div class="m-cell" style="color:#6366f1"><svg viewBox="0 0 50 50" style="width:100%;height:100%">`;
+          cellShapes.forEach(s => { prompt += shapes[s]; });
+          prompt += '</svg></div>';
+        }
+      }
+      prompt += '</div>';
+
+      let opts = [], correct = Math.floor(Math.random() * 6);
+      const allWrongs = [['circle'], ['square'], ['triangle'], ['diamond'], ['cross'], ['dot'], ['circle', 'dot'], ['square', 'cross'], ['triangle', 'diamond'], ['diamond', 'dot'], ['cross', 'square']];
+      // Filter out the correct answer and get 5 unique wrong answers
+      const wrongAnswers = allWrongs.filter(w => w.join() !== answer.join()).sort(() => Math.random() - 0.5).slice(0, 5);
+      let wrongIdx = 0;
+      for (let i = 0; i < 6; i++) {
+        const cellShapes = i === correct ? answer : wrongAnswers[wrongIdx++];
+        let html = `<svg viewBox="0 0 50 50" style="width:40px;height:40px;color:#6366f1">`;
+        cellShapes.forEach(s => { html += shapes[s]; });
+        html += '</svg>';
+        opts.push({ html, text: cellShapes.join('+') });
+      }
+
+      const ruleExp = { add: 'A + B = C (union of shapes)', xor: 'A XOR B = C (remove overlapping parts)', rotate: 'Shapes are sequentially added in each row', diagonal: 'Pattern progresses diagonally', complex: 'Complex XOR rule applied', sequence: 'Shapes accumulate sequentially' };
+      return { type: 'Matrix Pattern', prompt, opts, correct, explain: `Rule: ${ruleExp[p.rule]}. The answer is ${answer.join(' + ')}.` };
+    }
+
+    // Type 2: Number Matrix Logic (3x3 숫자 그리드 연산)
+    function genNumberMatrix(seed) {
+      const patterns = [
+        { grid: [[5, 3, 15], [4, 2, 8], [6, 5, '?']], ans: 30, exp: 'Each row: A × B = C. Therefore 6 × 5 = 30' },
+        { grid: [[12, 4, 3], [20, 5, 4], [18, 6, '?']], ans: 3, exp: 'Each row: A ÷ B = C. Therefore 18 ÷ 6 = 3' },
+        { grid: [[7, 5, 12], [9, 3, 12], [8, 6, '?']], ans: 14, exp: 'Each row: A + B = C. Therefore 8 + 6 = 14' },
+        { grid: [[15, 8, 7], [20, 12, 8], [25, 16, '?']], ans: 9, exp: 'Each row: A - B = C. Therefore 25 - 16 = 9' }
+      ];
+      const p = patterns[seed % patterns.length];
+
+      let prompt = '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:200px;margin:0 auto">';
+      p.grid.forEach(row => {
+        row.forEach(cell => {
+          if (cell === '?') {
+            prompt += '<div style="width:50px;height:50px;border-radius:50%;background:var(--acc);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;color:#000">?</div>';
+          } else {
+            prompt += `<div style="width:50px;height:50px;border-radius:50%;background:rgba(99,102,241,0.2);border:2px solid var(--p);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:16px">${cell}</div>`;
+          }
+        });
+      });
+      prompt += '</div>';
+
+      let opts = [], correct = Math.floor(Math.random() * 6);
+      // Generate unique wrong values
+      const wrongSet = new Set();
+      [p.ans - 7, p.ans - 5, p.ans - 3, p.ans - 1, p.ans + 1, p.ans + 2, p.ans + 4, p.ans + 6, p.ans * 2, Math.floor(p.ans / 2) + 1]
+        .filter(v => v > 0 && v !== p.ans).forEach(v => wrongSet.add(v));
+      const wrongVals = [...wrongSet].slice(0, 5);
+      let wrongIdx = 0;
+      for (let i = 0; i < 6; i++) {
+        const val = i === correct ? p.ans : wrongVals[wrongIdx++];
+        opts.push({ html: `<b style="font-size:20px">${val}</b>`, text: val });
+      }
+      return { type: 'Number Matrix', prompt, opts, correct, explain: p.exp };
+    }
+
+    // Type 3: Shape Counting (도형 개수 세기)
+    function genShapeCounting(seed) {
+      const questions = [
+        { q: 'How many triangles in total?', svg: '\u003cpolygon points="50,5 95,90 5,90" fill="none" stroke="#6366f1" stroke-width="2"/\u003e\u003cline x1="50" y1="5" x2="50" y2="90" stroke="#6366f1" stroke-width="2"/\u003e\u003cline x1="27.5" y1="47.5" x2="72.5" y2="47.5" stroke="#6366f1" stroke-width="2"/\u003e', ans: 9, exp: 'Large triangle 1 + Medium 4 + Small 4 = 9 triangles' },
+        { q: 'How many squares in total?', svg: '\u003crect x="5" y="5" width="90" height="90" fill="none" stroke="#6366f1" stroke-width="2"/\u003e\u003cline x1="35" y1="5" x2="35" y2="95" stroke="#6366f1" stroke-width="2"/\u003e\u003cline x1="65" y1="5" x2="65" y2="95" stroke="#6366f1" stroke-width="2"/\u003e\u003cline x1="5" y1="35" x2="95" y2="35" stroke="#6366f1" stroke-width="2"/\u003e\u003cline x1="5" y1="65" x2="95" y2="65" stroke="#6366f1" stroke-width="2"/\u003e', ans: 14, exp: '1×1: 9 + 2×2: 4 + 3×3: 1 = 14 squares' },
+        { q: 'How many rectangles in total?', svg: '\u003crect x="5" y="20" width="90" height="60" fill="none" stroke="#6366f1" stroke-width="2"/\u003e\u003cline x1="35" y1="20" x2="35" y2="80" stroke="#6366f1" stroke-width="2"/\u003e\u003cline x1="65" y1="20" x2="65" y2="80" stroke="#6366f1" stroke-width="2"/\u003e', ans: 6, exp: 'Small 3 + Medium 2 + Large 1 = 6 rectangles' },
+        { q: 'How many triangles in total?', svg: '\u003cpolygon points="50,5 95,90 5,90" fill="none" stroke="#6366f1" stroke-width="2"/\u003e\u003cline x1="27.5" y1="47.5" x2="72.5" y2="47.5" stroke="#6366f1" stroke-width="2"/\u003e\u003cline x1="50" y1="5" x2="27.5" y2="47.5" stroke="#6366f1" stroke-width="2"/\u003e\u003cline x1="50" y1="5" x2="72.5" y2="47.5" stroke="#6366f1" stroke-width="2"/\u003e\u003cline x1="27.5" y1="47.5" x2="50" y2="90" stroke="#6366f1" stroke-width="2"/\u003e\u003cline x1="72.5" y1="47.5" x2="50" y2="90" stroke="#6366f1" stroke-width="2"/\u003e', ans: 13, exp: 'Counting all triangles of various sizes = 13' },
+        { q: 'How many squares in total?', svg: '\u003crect x="10" y="10" width="80" height="80" fill="none" stroke="#6366f1" stroke-width="2"/\u003e\u003cline x1="50" y1="10" x2="50" y2="90" stroke="#6366f1" stroke-width="2"/\u003e\u003cline x1="10" y1="50" x2="90" y2="50" stroke="#6366f1" stroke-width="2"/\u003e\u003cline x1="30" y1="10" x2="30" y2="90" stroke="#6366f1" stroke-width="2"/\u003e\u003cline x1="70" y1="10" x2="70" y2="90" stroke="#6366f1" stroke-width="2"/\u003e\u003cline x1="10" y1="30" x2="90" y2="30" stroke="#6366f1" stroke-width="2"/\u003e\u003cline x1="10" y1="70" x2="90" y2="70" stroke="#6366f1" stroke-width="2"/\u003e', ans: 30, exp: '1×1: 16 + 2×2: 9 + 3×3: 4 + 4×4: 1 = 30 squares' }
+      ];
+      const q = questions[seed % questions.length];
+
+      let prompt = `<div class="tc"><svg viewBox="0 0 100 100" style="width:160px;height:160px;background:rgba(255,255,255,0.03);border-radius:8px;padding:8px">${q.svg}</svg><p style="margin-top:16px;font-size:15px;font-weight:600">${q.q}</p></div>`;
+
+      let opts = [], correct = Math.floor(Math.random() * 6);
+      // Generate unique wrong values
+      const wrongSet = new Set();
+      [q.ans - 6, q.ans - 4, q.ans - 2, q.ans - 1, q.ans + 1, q.ans + 2, q.ans + 3, q.ans + 5, q.ans + 7]
+        .filter(v => v > 0 && v !== q.ans).forEach(v => wrongSet.add(v));
+      const wrongVals = [...wrongSet].slice(0, 5);
+      let wrongIdx = 0;
+      for (let i = 0; i < 6; i++) {
+        const val = i === correct ? q.ans : wrongVals[wrongIdx++];
+        opts.push({ html: `<b style="font-size:22px">${val}</b>`, text: val });
+      }
+      return { type: 'Shape Counting', prompt, opts, correct, explain: q.exp };
+    }
+
+    // Type 4: Number Sequence (숫자 패턴)
+    function genNumberSequence(seed) {
+      const rules = [
+        { seq: [2, 5, 10, 17, 26], ans: 37, exp: 'Differences increase by +3, +5, +7, +9, +11... Next is 26+11=37' },
+        { seq: [3, 6, 12, 24, 48], ans: 96, exp: 'Multiply by 2 each step. 48×2=96' },
+        { seq: [1, 4, 9, 16, 25], ans: 36, exp: 'Perfect squares: 1², 2², 3², 4², 5², 6²=36' },
+        { seq: [2, 3, 5, 8, 13], ans: 21, exp: 'Fibonacci: each number is sum of previous two. 8+13=21' }
+      ];
+      const r = rules[seed % rules.length];
+
+      let prompt = '<div class="seq" style="flex-wrap:wrap;justify-content:center">';
+      r.seq.forEach((n, i) => {
+        prompt += `<div class="seq-cell" style="width:48px;height:48px;border-radius:50%;background:rgba(99,102,241,0.2);border:2px solid var(--p)">${n}</div>`;
+        prompt += '<span class="seq-arr" style="font-size:16px">→</span>';
+      });
+      prompt += '<div class="seq-cell q" style="width:48px;height:48px;border-radius:50%">?</div></div>';
+
+      // Generate exactly 5 unique wrong values
+      const allPossible = [];
+      for (let delta = -10; delta <= 15; delta++) {
+        const v = r.ans + delta;
+        if (v > 0 && v !== r.ans && !allPossible.includes(v)) allPossible.push(v);
+      }
+      // Shuffle and take first 5
+      const wrongVals = allPossible.sort(() => Math.random() - 0.5).slice(0, 5);
+
+      let opts = [], correct = Math.floor(Math.random() * 6);
+      let wrongIdx = 0;
+      for (let i = 0; i < 6; i++) {
+        const val = i === correct ? r.ans : wrongVals[wrongIdx++];
+        opts.push({ html: `<b style="font-size:20px">${val}</b>`, text: val });
+      }
+      return { type: 'Number Sequence', prompt, opts, correct, explain: r.exp };
+    }
+
+    // Type 5: Cube Folding (전개도 → 3D 큐브)
+    function genCubeFolding(seed) {
+      const cubes = [
+        {
+          net: ['#6366f1', '#f59e0b', '#22c55e', '#ef4444', '#8b5cf6', '#ffffff'],
+          layout: [[null, 0, null, null], [1, 2, 3, 4], [null, 5, null, null]],
+          correctColors: ['#22c55e', '#f59e0b', '#6366f1'],
+          exp: 'When folded, blue and white are on opposite sides.'
+        },
+        {
+          net: ['#ef4444', '#ef4444', '#6366f1', '#6366f1', '#ffffff', '#ffffff'],
+          layout: [[null, 0, null, null], [1, 2, 3, 4], [null, 5, null, null]],
+          correctColors: ['#6366f1', '#ef4444', '#ef4444'],
+          exp: 'The two red faces end up opposite each other.'
+        },
+        {
+          net: ['#22c55e', '#f59e0b', '#6366f1', '#ef4444', '#8b5cf6', '#22c55e'],
+          layout: [[null, 0, null, null], [1, 2, 3, 4], [null, 5, null, null]],
+          correctColors: ['#6366f1', '#f59e0b', '#22c55e'],
+          exp: 'The two green faces are on opposite sides of the cube.'
+        }
+      ];
+      const c = cubes[seed % cubes.length];
+
+      // Draw the net (전개도)
+      let prompt = '<div class="tc"><svg viewBox="0 0 200 150" style="width:200px;height:150px">';
+      const cellSize = 35;
+      c.layout.forEach((row, ri) => {
+        row.forEach((ci, cj) => {
+          if (ci !== null) {
+            const x = cj * cellSize + 20;
+            const y = ri * cellSize + 15;
+            prompt += `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" fill="${c.net[ci]}" stroke="#fff" stroke-width="2"/>`;
+          }
+        });
+      });
+      prompt += '</svg><p style="margin-top:12px;font-size:14px">이 전개도로 만들 수 있는 정육면체는?</p></div>';
+
+      // Predefined unique wrong color combinations
+      const wrongColorSets = [
+        ['#ef4444', '#6366f1', '#ffffff'],
+        ['#8b5cf6', '#22c55e', '#f59e0b'],
+        ['#ffffff', '#8b5cf6', '#ef4444'],
+        ['#f59e0b', '#ffffff', '#22c55e'],
+        ['#6366f1', '#ef4444', '#8b5cf6'],
+        ['#22c55e', '#8b5cf6', '#ffffff'],
+        ['#ef4444', '#f59e0b', '#6366f1'],
+        ['#ffffff', '#22c55e', '#8b5cf6']
+      ];
+
+      // Filter out combinations too similar to correct answer
+      const correctKey = c.correctColors.join(',');
+      const availableWrongs = wrongColorSets.filter(w => w.join(',') !== correctKey);
+      const shuffledWrongs = availableWrongs.sort(() => Math.random() - 0.5).slice(0, 5);
+
+      // Generate cube options
+      let opts = [], correct = Math.floor(Math.random() * 6);
+      let wrongIdx = 0;
+      for (let i = 0; i < 6; i++) {
+        const colors = i === correct ? c.correctColors : shuffledWrongs[wrongIdx++];
+        let html = `<svg viewBox="0 0 60 60" style="width:50px;height:50px">
+          <polygon points="10,25 30,15 50,25 30,35" fill="${colors[0]}" stroke="#333" stroke-width="1"/>
+          <polygon points="10,25 30,35 30,55 10,45" fill="${colors[1]}" stroke="#333" stroke-width="1"/>
+          <polygon points="30,35 50,25 50,45 30,55" fill="${colors[2]}" stroke="#333" stroke-width="1"/>
+        </svg>`;
+        opts.push({ html, text: `Cube ${i + 1}` });
+      }
+      return { type: 'Cube Folding', prompt, opts, correct, explain: c.exp };
+    }
+
+    // Type 6: Pattern Completion (빈 부분 패턴 채우기)
+    function genPatternCompletion(seed) {
+      const patterns = [
+        {
+          main: '<line x1="10" y1="50" x2="90" y2="50" stroke="#6366f1" stroke-width="2"/><line x1="50" y1="10" x2="50" y2="90" stroke="#6366f1" stroke-width="2"/><circle cx="30" cy="30" r="12" fill="none" stroke="#f59e0b" stroke-width="2"/><circle cx="70" cy="70" r="12" fill="none" stroke="#f59e0b" stroke-width="2"/>',
+          missing: '<circle cx="70" cy="30" r="12" fill="none" stroke="#f59e0b" stroke-width="2"/><circle cx="30" cy="70" r="12" fill="none" stroke="#f59e0b" stroke-width="2"/>',
+          wrongOpts: [
+            '<circle cx="50" cy="50" r="12" fill="#f59e0b"/>',
+            '<rect x="25" y="25" width="20" height="20" fill="none" stroke="#f59e0b" stroke-width="2"/>',
+            '<circle cx="70" cy="30" r="12" fill="#f59e0b"/>',
+            '<line x1="30" y1="30" x2="70" y2="70" stroke="#f59e0b" stroke-width="2"/>',
+            '<circle cx="30" cy="30" r="8" fill="#f59e0b"/>'
+          ],
+          exp: 'Symmetrical pattern: circles are arranged symmetrically at four corners.'
+        },
+        {
+          main: '<rect x="20" y="20" width="60" height="60" fill="none" stroke="#6366f1" stroke-width="2"/><line x1="20" y1="20" x2="80" y2="80" stroke="#6366f1" stroke-width="2"/>',
+          missing: '<line x1="80" y1="20" x2="20" y2="80" stroke="#6366f1" stroke-width="2"/>',
+          wrongOpts: [
+            '<circle cx="50" cy="50" r="15" fill="none" stroke="#6366f1" stroke-width="2"/>',
+            '<line x1="50" y1="20" x2="50" y2="80" stroke="#6366f1" stroke-width="2"/>',
+            '<rect x="35" y="35" width="30" height="30" fill="none" stroke="#6366f1" stroke-width="2"/>',
+            '<line x1="20" y1="50" x2="80" y2="50" stroke="#6366f1" stroke-width="2"/>',
+            '<polygon points="50,30 60,50 50,70 40,50" fill="none" stroke="#6366f1" stroke-width="2"/>'
+          ],
+          exp: 'A diagonal is needed to complete the X pattern inside the square.'
+        },
+        {
+          main: '<circle cx="50" cy="50" r="35" fill="none" stroke="#6366f1" stroke-width="2"/><circle cx="50" cy="50" r="20" fill="none" stroke="#6366f1" stroke-width="2"/><line x1="50" y1="15" x2="50" y2="30" stroke="#f59e0b" stroke-width="3"/><line x1="50" y1="70" x2="50" y2="85" stroke="#f59e0b" stroke-width="3"/>',
+          missing: '<line x1="15" y1="50" x2="30" y2="50" stroke="#f59e0b" stroke-width="3"/><line x1="70" y1="50" x2="85" y2="50" stroke="#f59e0b" stroke-width="3"/>',
+          wrongOpts: [
+            '<circle cx="50" cy="50" r="5" fill="#f59e0b"/>',
+            '<line x1="30" y1="30" x2="70" y2="70" stroke="#f59e0b" stroke-width="3"/>',
+            '<line x1="15" y1="15" x2="30" y2="30" stroke="#f59e0b" stroke-width="3"/>',
+            '<rect x="40" y="40" width="20" height="20" fill="#f59e0b"/>',
+            '<line x1="50" y1="50" x2="85" y2="50" stroke="#f59e0b" stroke-width="3"/>'
+          ],
+          exp: 'Lines are arranged in a cross pattern between concentric circles.'
+        },
+        {
+          main: '<polygon points="50,10 90,90 10,90" fill="none" stroke="#6366f1" stroke-width="2"/><circle cx="50" cy="50" r="8" fill="#f59e0b"/>',
+          missing: '<circle cx="30" cy="70" r="8" fill="#f59e0b"/><circle cx="70" cy="70" r="8" fill="#f59e0b"/>',
+          wrongOpts: [
+            '<circle cx="50" cy="80" r="8" fill="#f59e0b"/>',
+            '<rect x="45" y="65" width="10" height="10" fill="#f59e0b"/>',
+            '<circle cx="50" cy="30" r="8" fill="#f59e0b"/>',
+            '<circle cx="30" cy="30" r="8" fill="#f59e0b"/><circle cx="70" cy="30" r="8" fill="#f59e0b"/>',
+            '<line x1="30" y1="70" x2="70" y2="70" stroke="#f59e0b" stroke-width="3"/>'
+          ],
+          exp: 'Circles are placed near each vertex of the triangle.'
+        }
+      ];
+      const p = patterns[seed % patterns.length];
+
+      let prompt = `<div class="tc">
+        <div style="position:relative;display:inline-block">
+          <svg viewBox="0 0 100 100" style="width:160px;height:160px;background:rgba(255,255,255,0.03);border-radius:8px">${p.main}</svg>
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:40px;height:40px;background:var(--acc);border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;color:#000">?</div>
+        </div>
+        <p style="margin-top:12px;font-size:14px">Complete the pattern</p>
+      </div>`;
+
+      let opts = [], correct = Math.floor(Math.random() * 6);
+      // Shuffle wrongOpts to ensure 5 unique wrong answers
+      const shuffledWrongs = [...p.wrongOpts].sort(() => Math.random() - 0.5);
+      let wrongIdx = 0;
+      for (let i = 0; i < 6; i++) {
+        const svgContent = i === correct ? p.missing : shuffledWrongs[wrongIdx++];
+        let html = `<svg viewBox="0 0 100 100" style="width:45px;height:45px;background:rgba(255,255,255,0.05);border-radius:4px">${svgContent}</svg>`;
+        opts.push({ html, text: `Option ${i + 1}` });
+      }
+      return { type: 'Pattern Completion', prompt, opts, correct, explain: p.exp };
+    }
+
+    // Type 7: Rotational Logic (원형 세그먼트 회전/추가)
+    function genRotationalLogic(seed) {
+      const patterns = [
+        {
+          segments: [1, 2, 3, 4, 5],
+          ans: 6,
+          total: 8,
+          exp: '1/8 section is added each step. Next will be 6/8 filled.'
+        },
+        {
+          segments: [2, 4, 6, 8, 10],
+          ans: 12,
+          total: 16,
+          exp: '2/16 section is added each step. Next will be 12/16 filled.'
+        }
+      ];
+      const p = patterns[seed % patterns.length];
+
+      function drawPie(filled, total, size = 60) {
+        let svg = `<svg viewBox="0 0 100 100" style="width:${size}px;height:${size}px">`;
+        svg += '<circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>';
+        for (let i = 0; i < filled; i++) {
+          const startAngle = (i * 360 / total) - 90;
+          const endAngle = ((i + 1) * 360 / total) - 90;
+          const x1 = 50 + 45 * Math.cos(startAngle * Math.PI / 180);
+          const y1 = 50 + 45 * Math.sin(startAngle * Math.PI / 180);
+          const x2 = 50 + 45 * Math.cos(endAngle * Math.PI / 180);
+          const y2 = 50 + 45 * Math.sin(endAngle * Math.PI / 180);
+          svg += `<path d="M50,50 L${x1},${y1} A45,45 0 0,1 ${x2},${y2} Z" fill="#6366f1"/>`;
+        }
+        svg += '</svg>';
+        return svg;
+      }
+
+      let prompt = '<div class="seq" style="flex-wrap:wrap;justify-content:center;gap:12px">';
+      p.segments.forEach((seg, i) => {
+        prompt += `<div style="text-align:center">${drawPie(seg, p.total, 55)}</div>`;
+        if (i < p.segments.length - 1) prompt += '<span class="seq-arr">→</span>';
+      });
+      prompt += '<span class="seq-arr">→</span><div class="seq-cell q" style="width:55px;height:55px;border-radius:50%">?</div></div>';
+
+      let opts = [], correct = Math.floor(Math.random() * 6);
+      // Generate exactly 5 unique wrong values
+      const allPossibleWrongs = [];
+      for (let v = 1; v <= p.total; v++) {
+        if (v !== p.ans) allPossibleWrongs.push(v);
+      }
+      const wrongVals = allPossibleWrongs.sort(() => Math.random() - 0.5).slice(0, 5);
+      let wrongIdx = 0;
+      for (let i = 0; i < 6; i++) {
+        const val = i === correct ? p.ans : wrongVals[wrongIdx++];
+        opts.push({ html: drawPie(val, p.total, 45), text: `${val}/${p.total}` });
+      }
+      return { type: 'Rotational Logic', prompt, opts, correct, explain: p.exp };
+    }
+
+    // Type 8: Symbol Matrix (Latin Square 스타일)
+    function genSymbolMatrix(seed) {
+      const patterns = [
+        {
+          grid: [
+            ['●○', '■+', '▲'],
+            ['■', '▲○', '●+'],
+            ['▲+', '●', '?']
+          ],
+          answer: '■○',
+          exp: 'Each row and column must have ●, ■, ▲ once each, and inner symbols (○, +, none) once each.'
+        },
+        {
+          grid: [
+            ['◆', '★○', '●+'],
+            ['●○', '◆+', '★'],
+            ['★+', '●', '?']
+          ],
+          answer: '◆○',
+          exp: 'Each row and column must have ●, ★, ◆ once each, with inner symbols evenly distributed.'
+        }
+      ];
+      const p = patterns[seed % patterns.length];
+
+      const symbolMap = {
+        '●': '<circle cx="20" cy="20" r="14" fill="#6366f1"/>',
+        '■': '<rect x="6" y="6" width="28" height="28" fill="#f59e0b"/>',
+        '▲': '<polygon points="20,4 36,36 4,36" fill="#22c55e"/>',
+        '◆': '<polygon points="20,4 36,20 20,36 4,20" fill="#ef4444"/>',
+        '★': '<polygon points="20,4 24,14 36,14 27,22 30,34 20,26 10,34 13,22 4,14 16,14" fill="#8b5cf6"/>',
+        '○': '<circle cx="20" cy="20" r="5" fill="none" stroke="#fff" stroke-width="2"/>',
+        '+': '<line x1="20" y1="12" x2="20" y2="28" stroke="#fff" stroke-width="2"/><line x1="12" y1="20" x2="28" y2="20" stroke="#fff" stroke-width="2"/>'
+      };
+
+      function renderSymbol(sym) {
+        let svg = '<svg viewBox="0 0 40 40" style="width:100%;height:100%">';
+        for (let char of sym) {
+          if (symbolMap[char]) svg += symbolMap[char];
+        }
+        svg += '</svg>';
+        return svg;
+      }
+
+      let prompt = '<div class="matrix" style="max-width:180px">';
+      p.grid.forEach(row => {
+        row.forEach(cell => {
+          if (cell === '?') {
+            prompt += '<div class="m-cell q">?</div>';
+          } else {
+            prompt += `<div class="m-cell">${renderSymbol(cell)}</div>`;
+          }
+        });
+      });
+      prompt += '</div>';
+
+      let opts = [], correct = Math.floor(Math.random() * 6);
+      const wrongAnswers = ['●○', '■+', '▲', '◆○', '★+', '●', '■', '▲+'].filter(a => a !== p.answer);
+      for (let i = 0; i < 6; i++) {
+        const sym = i === correct ? p.answer : wrongAnswers[(i + seed) % wrongAnswers.length];
+        opts.push({ html: `<div style="width:40px;height:40px">${renderSymbol(sym)}</div>`, text: sym });
+      }
+      return { type: 'Symbol Matrix', prompt, opts, correct, explain: p.exp };
+    }
+
+    function renderQ() {
+      const q = qs[cQ];
+      document.getElementById('qnum').textContent = cQ + 1;
+      document.getElementById('prog-fill').style.width = ((cQ + 1) / 30 * 100) + '%';
+      document.getElementById('q-title').textContent = q.type;
+      document.getElementById('q-content').innerHTML = q.prompt;
+      const labels = ['A', 'B', 'C', 'D', 'E', 'F'];
+      document.getElementById('opts').innerHTML = q.opts.map((o, i) => `<div class="opt ${ans[cQ] === i ? 'sel' : ''}" onclick="selOpt(${i})"><span class="opt-l">${labels[i]})</span><span class="opt-c">${o.html}</span></div>`).join('');
+      document.getElementById('next-btn').textContent = cQ === 29 ? 'Finish ✓' : 'Next →';
+      updateNav();
+    }
+
+    function updateNav() {
+      let nav = '';
+      for (let i = 0; i < 30; i++) {
+        let cls = 'qn ';
+        if (i === cQ) cls += 'cur'; else if (ans[i] !== null) cls += 'done'; else cls += 'un';
+        nav += `<button class="${cls}" onclick="goQ(${i})">${i + 1}</button>`;
+      }
+      document.getElementById('qnav').innerHTML = nav;
+    }
+
+    function selOpt(i) { ans[cQ] = i; renderQ() }
+    function nextQ() { if (cQ < 29) { cQ++; renderQ() } else finishTest() }
+    function goQ(i) { cQ = i; renderQ() }
+
+    function startTest() { genQs(); cQ = 0; ans = new Array(30).fill(null); tLeft = 20 * 60; showP('test'); renderQ(); startTimer() }
+    function startTimer() { clearInterval(tInt); tInt = setInterval(() => { tLeft--; const m = Math.floor(tLeft / 60), s = tLeft % 60; const el = document.getElementById('timer'); el.textContent = `⏱️ ${m}:${s.toString().padStart(2, '0')}`; el.className = 'timer' + (tLeft <= 30 ? ' danger' : tLeft <= 60 ? ' warn' : ''); if (tLeft <= 0) { clearInterval(tInt); finishTest() } }, 1000) }
+    function finishTest() { clearInterval(tInt); showP('proc'); runProc() }
+    function runProc() { const txts = ['Analyzing patterns...', 'Calculating spatial IQ...', 'Evaluating reasoning...', 'Generating score...']; let s = 0; const i = setInterval(() => { s++; document.getElementById('proc-bar').style.width = (s * 25) + '%'; document.getElementById('proc-txt').textContent = txts[Math.min(s - 1, 3)]; if (s >= 4) { clearInterval(i); setTimeout(() => showP('email'), 500) } }, 700) }
+    function submitEmail() { calcRes(); showP('pay') }
+
+    function calcRes() {
+      let correct = 0, wrong = 0, skip = 0;
+      qs.forEach((q, i) => { if (ans[i] === null) skip++; else if (ans[i] === q.correct) correct++; else wrong++ });
+      const iq = Math.round(85 + (correct / 30) * 45);
+      const pct = Math.round(100 - (correct / 30) * 85);
+      document.getElementById('fin-iq').textContent = iq;
+      document.getElementById('fin-pct').textContent = pct;
+      document.getElementById('stat-correct').textContent = correct;
+      document.getElementById('stat-wrong').textContent = wrong;
+      document.getElementById('stat-skip').textContent = skip;
+
+      // Category analysis
+      const cats = [{ n: 'Pattern Recognition', s: Math.floor(correct * .3), m: 9 }, { n: 'Numerical Reasoning', s: Math.floor(correct * .25), m: 8 }, { n: 'Spatial Intelligence', s: Math.floor(correct * .25), m: 7 }, { n: 'Logical Analysis', s: Math.floor(correct * .2), m: 6 }];
+      document.getElementById('cat-res').innerHTML = cats.map(c => `<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:13px"><span>${c.n}</span><span>${c.s}/${c.m}</span></div><div class="prog"><div class="prog-fill" style="width:${(c.s / c.m) * 100}%"></div></div></div>`).join('');
+
+      // Generate answer review
+      generateAnswerReview();
+    }
+
+    function generateAnswerReview() {
+      const labels = ['A', 'B', 'C', 'D', 'E', 'F'];
+      let html = '';
+      qs.forEach((q, i) => {
+        const userAns = ans[i];
+        const isCorrect = userAns === q.correct;
+        const isSkip = userAns === null;
+        let status, statusClass;
+        if (isSkip) { status = 'Skipped'; statusClass = 'skip' }
+        else if (isCorrect) { status = 'Correct'; statusClass = 'correct' }
+        else { status = 'Wrong'; statusClass = 'wrong' }
+
+        html += `<div class="review-item">
+      <div class="review-header">
+        <span class="review-qnum">Q${i + 1}. ${q.type}</span>
+        <span class="review-status ${statusClass}">${status}</span>
+      </div>
+      <div class="review-answer">
+        <b>Correct Answer: ${labels[q.correct]}</b>${!isSkip && !isCorrect ? ` <span class="review-your">(You chose: ${labels[userAns]})</span>` : ''}
+      </div>
+      <div class="review-content" style="margin-top:8px">💡 ${q.explain}</div>
+    </div>`;
+      });
+      document.getElementById('answer-review').innerHTML = html;
+    }
+
+    // ========== PAYMENT FUNCTIONS ==========
+    let selectedPayMethod = null;
+
+    function openPayModal() {
+      document.getElementById('pay-modal').classList.add('active');
+      resetPayModal();
+    }
+
+    function closePayModal() {
+      document.getElementById('pay-modal').classList.remove('active');
+    }
+
+    function resetPayModal() {
+      selectedPayMethod = null;
+      document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('selected'));
+      document.getElementById('card-form').classList.remove('active');
+      document.getElementById('external-pay').classList.remove('active');
+      document.getElementById('pay-content').style.display = 'block';
+      document.getElementById('pay-processing').classList.remove('active');
+      document.getElementById('pay-success').classList.remove('active');
+      document.getElementById('pay-submit-btn').disabled = true;
+      document.getElementById('card-number').value = '';
+      document.getElementById('card-name').value = '';
+      document.getElementById('card-expiry').value = '';
+      document.getElementById('card-cvv').value = '';
+    }
+
+    function selectPayMethod(method) {
+      selectedPayMethod = method;
+      document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('selected'));
+      document.querySelector(`[data-method="${method}"]`).classList.add('selected');
+      document.getElementById('pay-submit-btn').disabled = false;
+
+      if (method === 'paypal' || method === 'applepay') {
+        document.getElementById('card-form').classList.remove('active');
+        document.getElementById('external-pay').classList.add('active');
+      } else {
+        document.getElementById('card-form').classList.add('active');
+        document.getElementById('external-pay').classList.remove('active');
+      }
+    }
+
+    function formatCardNumber(input) {
+      let value = input.value.replace(/\D/g, '');
+      value = value.substring(0, 16);
+      value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+      input.value = value;
+    }
+
+    function formatExpiry(input) {
+      let value = input.value.replace(/\D/g, '');
+      if (value.length >= 2) {
+        value = value.substring(0, 2) + '/' + value.substring(2, 4);
+      }
+      input.value = value;
+    }
+
+    function processPayment() {
+      document.getElementById('pay-content').style.display = 'none';
+      document.getElementById('pay-processing').classList.add('active');
+
+      // Simulate payment processing
+      setTimeout(() => {
+        document.getElementById('pay-processing').classList.remove('active');
+        document.getElementById('pay-success').classList.add('active');
+      }, 2500);
+    }
+
+    function showResults() {
+      closePayModal();
+      showP('res');
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('pay-modal').addEventListener('click', function (e) {
+      if (e.target === this) closePayModal();
+    });
+  </script>
+</body>
+
+</html>
